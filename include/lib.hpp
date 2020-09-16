@@ -4,5 +4,5 @@
 
 void dummy()
 {
-    std::cout << "HI" << std::endl;
+    std::cout << "Week 3 Part 1" << std::endl;
 }
