@@ -1,75 +1,88 @@
-#include "opencv2/imgproc.hpp"
+#include "opencv2/objdetect.hpp"
 #include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
 #include "opencv2/videoio.hpp"
 #include <iostream>
+using namespace std;
 using namespace cv;
-const int max_value_H = 360/2;
-const int max_value = 255;
-const String window_capture_name = "Video Capture";
-const String window_detection_name = "Object Detection";
-int low_H = 0, low_S = 0, low_V = 0;
-int high_H = max_value_H, high_S = max_value, high_V = max_value;
-static void on_low_H_thresh_trackbar(int, void *)
+void detectAndDisplay( Mat frame );
+CascadeClassifier face_cascade;
+CascadeClassifier eyes_cascade;
+int main( int argc, const char** argv )
 {
-    low_H = min(high_H-1, low_H);
-    setTrackbarPos("Low H", window_detection_name, low_H);
-}
-static void on_high_H_thresh_trackbar(int, void *)
-{
-    high_H = max(high_H, low_H+1);
-    setTrackbarPos("High H", window_detection_name, high_H);
-}
-static void on_low_S_thresh_trackbar(int, void *)
-{
-    low_S = min(high_S-1, low_S);
-    setTrackbarPos("Low S", window_detection_name, low_S);
-}
-static void on_high_S_thresh_trackbar(int, void *)
-{
-    high_S = max(high_S, low_S+1);
-    setTrackbarPos("High S", window_detection_name, high_S);
-}
-static void on_low_V_thresh_trackbar(int, void *)
-{
-    low_V = min(high_V-1, low_V);
-    setTrackbarPos("Low V", window_detection_name, low_V);
-}
-static void on_high_V_thresh_trackbar(int, void *)
-{
-    high_V = max(high_V, low_V+1);
-    setTrackbarPos("High V", window_detection_name, high_V);
-}
-int main(int argc, char* argv[])
-{
-    VideoCapture cap(argc > 1 ? atoi(argv[1]) : 0);
-    namedWindow(window_capture_name);
-    namedWindow(window_detection_name);
-    // Trackbars to set thresholds for HSV values
-    createTrackbar("Low H", window_detection_name, &low_H, max_value_H, on_low_H_thresh_trackbar);
-    createTrackbar("High H", window_detection_name, &high_H, max_value_H, on_high_H_thresh_trackbar);
-    createTrackbar("Low S", window_detection_name, &low_S, max_value, on_low_S_thresh_trackbar);
-    createTrackbar("High S", window_detection_name, &high_S, max_value, on_high_S_thresh_trackbar);
-    createTrackbar("Low V", window_detection_name, &low_V, max_value, on_low_V_thresh_trackbar);
-    createTrackbar("High V", window_detection_name, &high_V, max_value, on_high_V_thresh_trackbar);
-    Mat frame, frame_HSV, frame_threshold;
-    while (true) {
-        cap >> frame;
-        if(frame.empty())
+    CommandLineParser parser(argc, argv,
+                             "{help h||}"
+                             "{face_cascade|data/haarcascades/haarcascade_frontalface_alt.xml|Path to face cascade.}"
+                             "{eyes_cascade|data/haarcascades/haarcascade_eye_tree_eyeglasses.xml|Path to eyes cascade.}"
+                             "{camera|0|Camera device number.}");
+    parser.about( "\nThis program demonstrates using the cv::CascadeClassifier class to detect objects (Face + eyes) in a video stream.\n"
+                  "You can use Haar or LBP features.\n\n" );
+    parser.printMessage();
+    String face_cascade_name = cv::findFile( parser.get<String>("face_cascade") );
+    String eyes_cascade_name = cv::findFile( parser.get<String>("eyes_cascade") );
+    //String face_cascade_name = cv::samples::findFile( parser.get<String>("face_cascade") );
+    //String eyes_cascade_name = cv::samples::findFile( parser.get<String>("eyes_cascade") );
+    //-- 1. Load the cascades
+    //-- 1. Load the cascades
+    if( !face_cascade.load( face_cascade_name ) )
+    {
+        cout << "--(!)Error loading face cascade\n";
+        return -1;
+    };
+    if( !eyes_cascade.load( eyes_cascade_name ) )
+    {
+        cout << "--(!)Error loading eyes cascade\n";
+        return -1;
+    };
+    int camera_device = parser.get<int>("camera");
+    VideoCapture capture;
+    //-- 2. Read the video stream
+    capture.open( camera_device );
+    if ( ! capture.isOpened() )
+    {
+        cout << "--(!)Error opening video capture\n";
+        return -1;
+    }
+    Mat frame;
+    while ( capture.read(frame) )
+    {
+        if( frame.empty() )
         {
+            cout << "--(!) No captured frame -- Break!\n";
             break;
         }
-        // Convert from BGR to HSV colorspace
-        cvtColor(frame, frame_HSV, COLOR_BGR2HSV);
-        // Detect the object based on HSV Range Values
-        inRange(frame_HSV, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), frame_threshold);
-        // Show the frames
-        imshow(window_capture_name, frame);
-        imshow(window_detection_name, frame_threshold);
-        char key = (char) waitKey(30);
-        if (key == 'q' || key == 27)
+        //-- 3. Apply the classifier to the frame
+        detectAndDisplay( frame );
+        if( waitKey(10) == 27 )
         {
-            break;
+            break; // escape
         }
     }
     return 0;
+}
+void detectAndDisplay( Mat frame )
+{
+    Mat frame_gray;
+    cvtColor( frame, frame_gray, COLOR_BGR2GRAY );
+    equalizeHist( frame_gray, frame_gray );
+    //-- Detect faces
+    std::vector<Rect> faces;
+    face_cascade.detectMultiScale( frame_gray, faces );
+    for ( size_t i = 0; i < faces.size(); i++ )
+    {
+        Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
+        ellipse( frame, center, Size( faces[i].width/2, faces[i].height/2 ), 0, 0, 360, Scalar( 255, 0, 255 ), 4 );
+        Mat faceROI = frame_gray( faces[i] );
+        //-- In each face, detect eyes
+        std::vector<Rect> eyes;
+        eyes_cascade.detectMultiScale( faceROI, eyes );
+        for ( size_t j = 0; j < eyes.size(); j++ )
+        {
+            Point eye_center( faces[i].x + eyes[j].x + eyes[j].width/2, faces[i].y + eyes[j].y + eyes[j].height/2 );
+            int radius = cvRound( (eyes[j].width + eyes[j].height)*0.25 );
+            circle( frame, eye_center, radius, Scalar( 255, 0, 0 ), 4 );
+        }
+    }
+    //-- Show what you got
+    imshow( "Capture - Face detection", frame );
 }
