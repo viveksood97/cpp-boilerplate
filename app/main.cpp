@@ -21,8 +21,11 @@ int main(int ac, char* av[])
         desc.add_options()
             ("help", "produce help message")
             ("compression", po::value<double>(), "set compression level")
+	    ("cats", "are wonderful")
+	    ("dogs", "are not wonderful")
         ;
-
+	
+	// Parse Arguements 
         po::variables_map vm;        
         po::store(po::parse_command_line(ac, av, desc), vm);
         po::notify(vm);    
