@@ -1,88 +1,44 @@
-#include "opencv2/objdetect.hpp"
-#include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
-#include "opencv2/videoio.hpp"
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui.hpp"
 #include <iostream>
-using namespace std;
 using namespace cv;
-void detectAndDisplay( Mat frame );
-CascadeClassifier face_cascade;
-CascadeClassifier eyes_cascade;
-int main( int argc, const char** argv )
+Mat src, dst;
+int morph_elem = 0;
+int morph_size = 0;
+int morph_operator = 0;
+int const max_operator = 4;
+int const max_elem = 2;
+int const max_kernel_size = 21;
+const char* window_name = "Morphology Transformations Demo";
+void Morphology_Operations( int, void* );
+int main( int argc, char** argv )
 {
-    CommandLineParser parser(argc, argv,
-                             "{help h||}"
-                             "{face_cascade|data/haarcascades/haarcascade_frontalface_alt.xml|Path to face cascade.}"
-                             "{eyes_cascade|data/haarcascades/haarcascade_eye_tree_eyeglasses.xml|Path to eyes cascade.}"
-                             "{camera|0|Camera device number.}");
-    parser.about( "\nThis program demonstrates using the cv::CascadeClassifier class to detect objects (Face + eyes) in a video stream.\n"
-                  "You can use Haar or LBP features.\n\n" );
-    parser.printMessage();
-    String face_cascade_name = cv::findFile( parser.get<String>("face_cascade") );
-    String eyes_cascade_name = cv::findFile( parser.get<String>("eyes_cascade") );
-    //String face_cascade_name = cv::samples::findFile( parser.get<String>("face_cascade") );
-    //String eyes_cascade_name = cv::samples::findFile( parser.get<String>("eyes_cascade") );
-    //-- 1. Load the cascades
-    //-- 1. Load the cascades
-    if( !face_cascade.load( face_cascade_name ) )
-    {
-        cout << "--(!)Error loading face cascade\n";
-        return -1;
-    };
-    if( !eyes_cascade.load( eyes_cascade_name ) )
-    {
-        cout << "--(!)Error loading eyes cascade\n";
-        return -1;
-    };
-    int camera_device = parser.get<int>("camera");
-    VideoCapture capture;
-    //-- 2. Read the video stream
-    capture.open( camera_device );
-    if ( ! capture.isOpened() )
-    {
-        cout << "--(!)Error opening video capture\n";
-        return -1;
-    }
-    Mat frame;
-    while ( capture.read(frame) )
-    {
-        if( frame.empty() )
-        {
-            cout << "--(!) No captured frame -- Break!\n";
-            break;
-        }
-        //-- 3. Apply the classifier to the frame
-        detectAndDisplay( frame );
-        if( waitKey(10) == 27 )
-        {
-            break; // escape
-        }
-    }
-    return 0;
+  CommandLineParser parser( argc, argv, "{@input | baboon.jpg | input image}" );
+  src = imread( parser.get<String>( "@input" ) , IMREAD_COLOR );
+  if (src.empty())
+  {
+    std::cout << "Could not open or find the image!\n" << std::endl;
+    std::cout << "Usage: " << argv[0] << " <Input image>" << std::endl;
+    return EXIT_FAILURE;
+  }
+  namedWindow( window_name, WINDOW_AUTOSIZE ); // Create window
+  createTrackbar("Operator:\n 0: Opening - 1: Closing  \n 2: Gradient - 3: Top Hat \n 4: Black Hat", window_name, &morph_operator, max_operator, Morphology_Operations );
+  createTrackbar( "Element:\n 0: Rect - 1: Cross - 2: Ellipse", window_name,
+                  &morph_elem, max_elem,
+                  Morphology_Operations );
+  createTrackbar( "Kernel size:\n 2n +1", window_name,
+                  &morph_size, max_kernel_size,
+                  Morphology_Operations );
+  Morphology_Operations( 0, 0 );
+  waitKey(0);
+  return 0;
 }
-void detectAndDisplay( Mat frame )
+void Morphology_Operations( int, void* )
 {
-    Mat frame_gray;
-    cvtColor( frame, frame_gray, COLOR_BGR2GRAY );
-    equalizeHist( frame_gray, frame_gray );
-    //-- Detect faces
-    std::vector<Rect> faces;
-    face_cascade.detectMultiScale( frame_gray, faces );
-    for ( size_t i = 0; i < faces.size(); i++ )
-    {
-        Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
-        ellipse( frame, center, Size( faces[i].width/2, faces[i].height/2 ), 0, 0, 360, Scalar( 255, 0, 255 ), 4 );
-        Mat faceROI = frame_gray( faces[i] );
-        //-- In each face, detect eyes
-        std::vector<Rect> eyes;
-        eyes_cascade.detectMultiScale( faceROI, eyes );
-        for ( size_t j = 0; j < eyes.size(); j++ )
-        {
-            Point eye_center( faces[i].x + eyes[j].x + eyes[j].width/2, faces[i].y + eyes[j].y + eyes[j].height/2 );
-            int radius = cvRound( (eyes[j].width + eyes[j].height)*0.25 );
-            circle( frame, eye_center, radius, Scalar( 255, 0, 0 ), 4 );
-        }
-    }
-    //-- Show what you got
-    imshow( "Capture - Face detection", frame );
+  // Since MORPH_X : 2,3,4,5 and 6
+  int operation = morph_operator + 2;
+  Mat element = getStructuringElement( morph_elem, Size( 2*morph_size + 1, 2*morph_size+1 ), Point( morph_size, morph_size ) );
+  morphologyEx( src, dst, operation, element );
+  imshow( window_name, dst );
 }
