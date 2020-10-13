@@ -9,7 +9,7 @@ int main()
 
 	std::cout << "M = " << std::endl << M << std::endl;
 
-	Eigen::Vector3d v(1, 2, 3);
+	Eigen::Vector4d v(1, 2, 3, 4);
 	std::cout << "M*v = " << std::endl << M * v << std::endl;
     return 0;
 }
