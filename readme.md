@@ -3,6 +3,12 @@
 [![Coverage Status](https://coveralls.io/repos/github/dpiet/cpp-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/dpiet/cpp-boilerplate?branch=master)
 ---
 
+## Driver 
+Vivek Sood
+
+#Navigator
+Pratik Acharya
+
 ## Overview
 
 Simple starter C++ project with:
