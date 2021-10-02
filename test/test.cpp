@@ -14,7 +14,17 @@ TEST_F(TEST, should_pass) {
       EXPECT_NE(testPID.computeNewVelocity(1.1), -1);
   }
 
+TEST_F(TEST, controllerTest) {
+    double currentVelocity = 0;
+    double newVelocity = 0;
+    testPID.setTargetVelocity(20);
 
+    for (int i = 0; i <= 20; ++i) {
+        newVelocity = testPID.computeNewVelocity(currentVelocity);
+    }
+
+    EXPECT_NEAR(20, newVelocity, 0.001);
+}
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);

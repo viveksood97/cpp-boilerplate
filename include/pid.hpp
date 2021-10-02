@@ -11,6 +11,7 @@ class PIDController {
     double ki;
     double kd;
     double summationError;
+    double pastError;
     double targetVelocity;
 
  public:
