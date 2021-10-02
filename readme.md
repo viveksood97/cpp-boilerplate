@@ -12,6 +12,16 @@ Github Username: viveksood97
 Pratik Acharya
 Github Username: pratik-a99 
 
+## UML Diagram
+[link](https://drive.google.com/file/d/1mB3QGFGTcNCEAUvfmSz2qRmXcQdjdS70/view?usp=sharing)
+[UML Diagram for the class PIDController](TDD_UML.png)
+
+## Activity Diagram
+[link](https://drive.google.com/file/d/17HL5u0FMskLM-HcG4wG3E4nzX6cem7cY/view?usp=sharing)
+[Activity Diagram of the PID Code](TDD_activity_diagram.png)
+
+
+
 ## Overview
 
 Simple starter C++ project with:
