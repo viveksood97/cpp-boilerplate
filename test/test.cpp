@@ -17,7 +17,7 @@ class PIDTESTS : public::testing::Test{
 
 /// @brief Test from PIDTESTS test cases. Checks the output
 TEST_F(PIDTESTS, outputTest) {
-      EXPECT_EQ(testPID.computeNewVelocity(1.1), -1);
+      EXPECT_NE(testPID.computeNewVelocity(1.1), -1);
   }
 
 /// @brief Test from PIDTESTS test cases. Convergence test
@@ -31,7 +31,7 @@ TEST_F(PIDTESTS, controllerTest) {
         newVelocity = testPID.computeNewVelocity(currentVelocity);
     }
 
-    EXPECT_NEAR(-1, newVelocity, 0.001);
+    EXPECT_NEAR(20, newVelocity, 0.001);
 }
 
 int main(int argc, char** argv) {
