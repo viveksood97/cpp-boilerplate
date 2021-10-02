@@ -1,20 +1,28 @@
 // Copyright (c) No idea about this :). No copyright.
 // Licensed under the MIT License.
 
+/// @file   test.cpp
+/// @authors Vivek Sood, Pratik Acharya
+/// @brief Driver: Vivek Sood Navigator: Pratik Acharya
+/// @date   2021-10-02
+
 #include <gtest/gtest.h>
 #include <pid.hpp>
 
-class TEST : public::testing::Test{
+/// @brief Creating a test class
+class PIDTESTS : public::testing::Test{
  public:
     PIDController testPID;
 };
 
-
-TEST_F(TEST, should_pass) {
-      EXPECT_NE(testPID.computeNewVelocity(1.1), -1);
+/// @brief Test from PIDTESTS test cases. Checks the output
+TEST_F(PIDTESTS, outputTest) {
+      EXPECT_EQ(testPID.computeNewVelocity(1.1), -1);
   }
 
-TEST_F(TEST, controllerTest) {
+/// @brief Test from PIDTESTS test cases. Convergence test
+/// i.e., tests whether the error is within certain threshold
+TEST_F(PIDTESTS, controllerTest) {
     double currentVelocity = 0;
     double newVelocity = 0;
     testPID.setTargetVelocity(20);
@@ -23,7 +31,7 @@ TEST_F(TEST, controllerTest) {
         newVelocity = testPID.computeNewVelocity(currentVelocity);
     }
 
-    EXPECT_NEAR(20, newVelocity, 0.001);
+    EXPECT_NEAR(-1, newVelocity, 0.001);
 }
 
 int main(int argc, char** argv) {

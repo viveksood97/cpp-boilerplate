@@ -5,9 +5,12 @@
 
 ## Driver 
 Vivek Sood
+Github Username: viveksood97
 
-#Navigator
+
+## Navigator
 Pratik Acharya
+Github Username: pratik-a99 
 
 ## Overview
 
