@@ -22,9 +22,7 @@ matrix:
       env: COMPILER=g++-5
 
 before_install:
-  - sudo apt-get install python3
-  
-  - python3 -m pip install --user cpp-coveralls
+  - python -m pip install --user cpp-coveralls
 install:
   - sudo apt-get install -y -qq lcov
 script:
