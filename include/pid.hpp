@@ -23,6 +23,12 @@ class PIDController {
     double timeInterval;
 
  public:
+    /// @brief Contructor for cppcheck
+    PIDController();
+
+    /// @brief Destructor for cppcheck
+    ~PIDController();
+
     /// @brief Setter for targetVelocity.
     /// @param[in] velocity the value of velocity to set
     void setTargetVelocity(double velocity) {
