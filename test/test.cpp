@@ -12,7 +12,7 @@ class TEST : public::testing::Test{
 
 
 TEST_F(TEST, should_pass) {
-      EXPECT_NE(testPID.computeNewVelocity(1.1), -1);
+      EXPECT_EQ(testPID.computeNewVelocity(1.1), -1);
   }
 
 
