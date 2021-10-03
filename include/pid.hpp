@@ -14,13 +14,13 @@
 /// @brief Implementation of a PID controller
 class PIDController {
  private:
-    double kp = 1;
-    double ki = 1;
-    double kd = 1;
+    double kp = 0.4;
+    double ki = 0.001;
+    double kd = 0.0001;
     double summationError = 0;
-    double pastError = 0;
     double targetVelocity;
-    double timeInterval = 0.1;
+    double pastError = 0;
+    double timeInterval = 0.01;
 
  public:
     /// @brief Setter for targetVelocity.
