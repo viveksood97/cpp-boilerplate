@@ -7,15 +7,15 @@
 /// @brief Driver: Vivek Sood Navigator: Pratik Acharya
 /// @date   2021-10-02
 
-
-#include <iostream>
 #include <pid.hpp>
 
 
-/// @brief main function
-/// @return  0
-int main() {
-    PIDController pid;
-    std::cout << pid.computeNewVelocity(0) << std::endl;
-    return 0;
-}
+    void PIDController::setTargetVelocity(double velocity) {
+        targetVelocity = velocity;
+    }
+
+    double PIDController::computeNewVelocity(double currentVelocity) {
+        double newVelocity = -1;
+        return newVelocity;
+    }
+
