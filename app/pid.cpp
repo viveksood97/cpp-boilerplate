@@ -14,8 +14,21 @@
         targetVelocity = velocity;
     }
 
-    double PIDController::computeNewVelocity(double currentVelocity) {
-        double newVelocity = -1;
+    float PIDController::computeNewVelocity(double currentVelocity) {
+        double error = targetVelocity - currentVelocity;
+        float newVelocity = currentVelocity;
+        double Pout, integral (0.0), Iout, derivative, Dout, summationError;
+    
+        Pout = kp* error;
+        integral += error*timeInterval;
+        Iout = ki*integral;
+        derivative = (error - pastError)/timeInterval;
+        Dout = kd * derivative;
+        summationError = Pout + Iout + Dout;
+        pastError= error;
+        newVelocity = newVelocity + summationError;
+        error = targetVelocity - newVelocity;
+
         return newVelocity;
     }
 
