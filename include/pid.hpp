@@ -33,6 +33,10 @@ class PIDController {
     /// @param[in] currentVelocity the current velocity
     /// @return new velocity
     double computeNewVelocity(double currentVelocity);
+
+    /// @brief get the target velocity
+    /// @return target velocity
+    double getTargetVelocity();
 };
 
 

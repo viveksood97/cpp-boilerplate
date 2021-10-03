@@ -11,7 +11,7 @@
 
 /// @brief Creating a test class
 class PIDTESTS : public ::testing::Test {
-public:
+ public:
   PIDController testPID;
 };
 
@@ -34,6 +34,12 @@ TEST_F(PIDTESTS, controllerTest) {
 
   EXPECT_NEAR(20, newVelocity, 0.01);
 }
+
+TEST_F(PIDTESTS, targetVelocityTest) {
+  testPID.setTargetVelocity(20);
+  EXPECT_EQ(testPID.getTargetVelocity(), 20);
+}
+
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);

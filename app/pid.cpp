@@ -14,6 +14,10 @@
         targetVelocity = velocity;
     }
 
+    double PIDController:: getTargetVelocity() {
+        return 0;
+    }
+
     double PIDController::computeNewVelocity(double currentVelocity) {
         double newVelocity = -1;
         return newVelocity;
