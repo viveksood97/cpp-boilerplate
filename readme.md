@@ -1,5 +1,5 @@
 # C++ Boilerplate
-[![Build Status](https://app.travis-ci.com/viveksood97/cpp-boilerplate.svg?branch=master&service=github)](https://app.travis-ci.com/viveksood97/cpp-boilerplate)
+[![Build Status](https://app.travis-ci.com/viveksood97/cpp-boilerplate.svg?branch=master&kill_cache=1)](https://app.travis-ci.com/viveksood97/cpp-boilerplate)
 [![Coverage Status](https://coveralls.io/repos/github/viveksood97/cpp-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/viveksood97/cpp-boilerplate?branch=master)
 ---
 # Part I
