@@ -14,7 +14,7 @@
 /// @return  0
 int main() {
     PIDController pid;
-    pid.setTargetVelocity(0.0);
-    std::cout << pid.computeNewVelocity(0.0) << std::endl;
+    pid.setTargetVelocity(15);
+    std::cout << pid.computeNewVelocity(5) << std::endl;
     return 0;
 }

@@ -6,7 +6,6 @@
 /// @brief Driver: Vivek Sood Navigator: Pratik Acharya
 /// @date   2021-10-02
 
-#pragma once
 
 #include <iostream>
 
@@ -14,13 +13,14 @@
 /// @brief Implementation of a PID controller
 class PIDController {
  private:
-    double kp = 0.4;
-    double ki = 0.001;
-    double kd = 0.0001;
-    double summationError = 0;
+
+    double kp=1;
+    double ki=0.0005;
+    double kd=0.01;
+    double summationError=0;
+    double pastError=0;
     double targetVelocity;
-    double pastError = 0;
-    double timeInterval = 0.01;
+    double timeInterval=0.1;
 
  public:
     /// @brief Setter for targetVelocity.
@@ -32,11 +32,13 @@ class PIDController {
     /// targetVelocity and timeInterval
     /// @param[in] currentVelocity the current velocity
     /// @return new velocity
-    double computeNewVelocity(double currentVelocity);
+
+    float computeNewVelocity(double currentVelocity);
 
     /// @brief get the target velocity
     /// @return target velocity
     double getTargetVelocity();
+
 };
 
 
