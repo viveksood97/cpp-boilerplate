@@ -13,6 +13,7 @@
 /// @brief Implementation of a PID controller
 class PIDController {
  private:
+
     double kp=1;
     double ki=0.0005;
     double kd=0.01;
@@ -31,7 +32,13 @@ class PIDController {
     /// targetVelocity and timeInterval
     /// @param[in] currentVelocity the current velocity
     /// @return new velocity
+
     float computeNewVelocity(double currentVelocity);
+
+    /// @brief get the target velocity
+    /// @return target velocity
+    double getTargetVelocity();
+
 };
 
 

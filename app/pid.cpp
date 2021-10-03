@@ -14,6 +14,10 @@
         targetVelocity = velocity;
     }
 
+    double PIDController::getTargetVelocity() {
+        return 0;
+    }
+
     float PIDController::computeNewVelocity(double currentVelocity) {
         double error = targetVelocity - currentVelocity;
         float newVelocity = currentVelocity;
@@ -28,7 +32,6 @@
         pastError= error;
         newVelocity = newVelocity + summationError;
         error = targetVelocity - newVelocity;
-
         return newVelocity;
     }
 
