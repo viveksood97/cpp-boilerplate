@@ -9,6 +9,12 @@
 
 #include <pid.hpp>
 
+    PIDController::PIDController() {
+        targetVelocity = 0;
+    }
+
+    PIDController::~PIDController() {}
+
     /**
      * @brief Function to set target velocity
      * @param  targetVelocity
