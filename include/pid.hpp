@@ -5,7 +5,8 @@
 /// @authors Vivek Sood, Pratik Acharya
 /// @brief Driver: Vivek Sood Navigator: Pratik Acharya
 /// @date   2021-10-02
-
+#ifndef INCLUDE_PID_HPP_
+#define INCLUDE_PID_HPP_
 
 #include <iostream>
 
@@ -13,18 +14,24 @@
 /// @brief Implementation of a PID controller
 class PIDController {
  private:
-
-    double kp=1;
-    double ki=0.0005;
-    double kd=0.01;
-    double summationError=0;
-    double pastError=0;
-    double targetVelocity;
-    double timeInterval=0.1;
+  double kp = 1;
+  double ki = 0.0005;
+  double kd = 0.01;
+  double summationError = 0;
+  double pastError = 0;
+  double targetVelocity;
+  double timeInterval = 0.1;
 
  public:
+    /// @brief Default constructor
+    PIDController();
+
+    /// @brief Default Destructor
+    ~PIDController();
+
     /// @brief Setter for targetVelocity.
     /// @param[in] velocity the value of velocity to set
+
     void setTargetVelocity(double velocity);
 
     /// @brief Computes the new velocity using
@@ -38,7 +45,5 @@ class PIDController {
     /// @brief get the target velocity
     /// @return target velocity
     double getTargetVelocity();
-
 };
-
-
+#endif  // INCLUDE_PID_HPP_

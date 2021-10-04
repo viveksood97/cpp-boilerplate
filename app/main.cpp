@@ -10,11 +10,15 @@
 #include <pid.hpp>
 
 
-/// @brief main function
-/// @return  0
+/// @brief main function which calls PID controller
 int main() {
+    /// creating object pid of PID controller class
     PIDController pid;
+
+    /// Set target velocity
     pid.setTargetVelocity(15);
+
+    /// Calculate new velocity
     std::cout << pid.computeNewVelocity(5) << std::endl;
     return 0;
 }
